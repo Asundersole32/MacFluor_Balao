@@ -19,6 +19,16 @@ def temp_converter(temp, temp_scale):
         return False
 
 
+def kilogram_to_newton(weight):
+    newton = weight/0.10197
+    return newton
+
+
+def add_persons(persons_newton, load):
+    new_load = persons_newton + load
+    return new_load
+
+
 def main():
     diameter = float(input("Insert the diameter of the balloon: "))
     load = float(input("Insert the balloon's load: "))
@@ -34,8 +44,21 @@ def main():
         print("Type a acceptable scale!")
         return main()
 
-    air_temp = activity_2(diameter, load, converted_temp, gravity, atmosphere_pressure)
-    return air_temp
+    choice = input("Do you want to add persons on the balloon?(yes or no): ")
+    choice = choice.lower()
+
+    if choice == "yes":
+        persons_weight = float(input("Insert the persons weight(in kilograms): "))
+        persons_newton = kilogram_to_newton(persons_weight)
+        new_load = add_persons(persons_newton, load)
+        air_temp = activity_2(diameter, new_load, converted_temp, gravity, atmosphere_pressure)
+        return air_temp
+    elif choice == "no":
+        air_temp = activity_2(diameter, load, converted_temp, gravity, atmosphere_pressure)
+        return air_temp
+    else:
+        print("Please, answer with yes or no!")
+        return main()
 
 
 main()
