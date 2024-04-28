@@ -15,15 +15,27 @@ def temp_converter(temp, temp_scale):
         return converted_temp
     elif temp_scale == 'kelvin':
         return temp
+    else:
+        return False
 
 
-diameter = float(input("Insert de diameter of the balloon: "))
-load = float(input("Insert the balloon's load: "))
-temperature = float(input("Insert the atmosphere temperature: "))
-temp_scale = input("Insert the temperature scale(Celsius, Kelvin or Fahrenheit): ")
-temp_scale = temp_scale.lower()
-gravity = float(input("Insert the gravity: "))
-atmosphere_pressure = float(input("Insert the atmosphere pressure: "))
+def main():
+    diameter = float(input("Insert the diameter of the balloon: "))
+    load = float(input("Insert the balloon's load: "))
+    gravity = float(input("Insert the gravity: "))
+    atmosphere_pressure = float(input("Insert the atmosphere pressure: "))
+    temperature = float(input("Insert the atmosphere temperature: "))
+    temp_scale = input("Insert the temperature scale(Celsius, Kelvin or Fahrenheit): ")
+    temp_scale = temp_scale.lower()
 
-converted_temp = temp_converter(temperature, temp_scale)
-air_temp = activity_2(diameter, load, converted_temp, gravity, atmosphere_pressure)
+    converted_temp = temp_converter(temperature, temp_scale)
+
+    if not converted_temp:
+        print("Type a acceptable scale!")
+        return main()
+
+    air_temp = activity_2(diameter, load, converted_temp, gravity, atmosphere_pressure)
+    return air_temp
+
+
+main()
