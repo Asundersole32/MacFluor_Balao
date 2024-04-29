@@ -29,6 +29,13 @@ def add_persons(persons_newton, load):
     return new_load
 
 
+def cost(air_temp, diameter):
+    cost1 = 50
+    cost2 = 200
+    total_cost = ((cost1*air_temp) + (cost2*diameter))
+    return total_cost
+
+
 def main():
     diameter = float(input("Insert the diameter of the balloon: "))
     load = float(input("Insert the balloon's load: "))
@@ -48,30 +55,82 @@ def main():
     choice1 = choice1.lower()
 
     if choice1 == "yes":
-        persons_weight = float(input("Insert the persons weight(in kilograms): "))
+        persons_weight = float(input("Insert the number of persons in the balloon: "))
+        persons_weight = persons_weight * 69
         persons_newton = kilogram_to_newton(persons_weight)
         new_load = add_persons(persons_newton, load)
         air_temp = activity_2(diameter, new_load, converted_temp, gravity, atmosphere_pressure)
         return air_temp
     elif choice1 == "no":
-        air_temp = activity_2(diameter, load, converted_temp, gravity, atmosphere_pressure)
-        return air_temp
+        choice2 = input("Do you want to change the balloon diameter?(yes or no): ")
+        choice2 = choice2.lower()
+
+        if choice2 == "yes":
+            new_diameter = float(input("Please, insert the new diameter: "))
+            air_temp = activity_2(new_diameter, load, converted_temp, gravity, atmosphere_pressure)
+        elif choice2 == "no":
+            choice3 = input("Do you want to optimise the balloon diameter?(yes or no): ")
+            choice3 = choice3.lower()
+
+            if choice3 == "yes":
+                choice4 = input("Do you want to add persons on the balloon with the optimise option?(yes or no): ")
+                choice4 = choice4.lower()
+                if choice4 == "yes":
+                    persons_weight = float(input("Insert the number of persons in the balloon: "))
+                    persons_weight = persons_weight * 69
+                    persons_newton = kilogram_to_newton(persons_weight)
+                    new_load = add_persons(persons_newton, load)
+                    cost_list = []
+                    optimise_diameter = diameter
+                    air_temp = activity_2(optimise_diameter, new_load, converted_temp, gravity, atmosphere_pressure)
+                    cost_value = cost(air_temp[1], optimise_diameter)
+                    cost_list.append(cost_value)
+                    while True:
+                        optimise_diameter = optimise_diameter - 1
+                        air_temp = activity_2(optimise_diameter, new_load, converted_temp, gravity, atmosphere_pressure)
+                        new_cost_value = cost(air_temp[1], optimise_diameter)
+                        if new_cost_value < cost_value:
+                            cost_list.append(new_cost_value)
+                            cost_value = new_cost_value
+                        elif new_cost_value > cost_value:
+                            cost_list.append(new_cost_value)
+                            optimise_diameter = optimise_diameter + 1
+                            air_temp = activity_2(optimise_diameter, new_load, converted_temp, gravity, atmosphere_pressure)
+                            return [cost_value, optimise_diameter, air_temp[1], cost_list]
+                elif choice4 == "no":
+                    cost_list = []
+                    optimise_diameter = diameter
+                    air_temp = activity_2(optimise_diameter, load, converted_temp, gravity, atmosphere_pressure)
+                    cost_value = cost(air_temp[1], optimise_diameter)
+                    cost_list.append(cost_value)
+                    while True:
+                        optimise_diameter = optimise_diameter - 1
+                        air_temp = activity_2(optimise_diameter, load, converted_temp, gravity, atmosphere_pressure)
+                        new_cost_value = cost(air_temp[1], optimise_diameter)
+                        if new_cost_value < cost_value:
+                            cost_list.append(new_cost_value)
+                            cost_value = new_cost_value
+                        elif new_cost_value > cost_value:
+                            cost_list.append(new_cost_value)
+                            optimise_diameter = optimise_diameter + 1
+                            air_temp = activity_2(optimise_diameter, load, converted_temp, gravity, atmosphere_pressure)
+                            return [cost_value, optimise_diameter, air_temp[1], cost_list]
+                else:
+                    print("Please answer with yes or no!")
+                    return main()
+            elif choice3 == "no":
+                air_temp = activity_2(diameter, load, converted_temp, gravity, atmosphere_pressure)
+                return air_temp
+            else:
+                print("Please answer with yes or no!")
+                return main()
+        else:
+            print("Please, answer with yes or no!")
+            return main()
     else:
         print("Please, answer with yes or no!")
         return main()
 
-    choice2 = input("Do you want to change the balloon diameter?(yes or no): ")
-    choice2 = choice2.lower()
 
-    if choice2 == "yes":
-        new_diameter = float(input("Please, insert the new diameter: "))
-        air_temp = activity_2(new_diameter, new_load, converted_temp, gravity, atmosphere_pressure)
-    elif choice2 == "no":
-        air_temp = activity_2(diameter, load, converted_temp, gravity, atmosphere_pressure)
-        return air_temp
-    else:
-        print("Please, answer with yes or no!")
-        return main()
-
-
-main()
+final = main()
+print(final)
